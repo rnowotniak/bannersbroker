@@ -14,8 +14,8 @@ PANELS_ATTRIBUTES = (
     ('Purple',   30,   15000,  6),
     ('Blue',     90,   45000,  7),
     ('Green',   270,  135000,  8),
-    ('Red',     810,  405000,  9),  # XXX
-    ('Black',  2430, 1215000, 10),  # XXX
+    ('Red',     810,  405000, 12),
+    ('Black',  2430, 1215000, 34),
 )
 
 class PanelType:
@@ -30,8 +30,6 @@ class PanelSettings:
 class PanelStatus:
     NOT_QUALIFIED = 0
     ACTIVE = 1
-    CLOSED = 2 # XXX -> IN_QUEUE ?
-    # IN_QUEUE = 3 # XXX ?
 
 class Panel:
     YELLOW = 0
@@ -52,12 +50,10 @@ class Panel:
         self.name, self.price, self.traffic, self.time = PANELS_ATTRIBUTES[color]
         self.type = type
         self.cycle = 0
-#        self.status = PanelStatus.ACTIVE if type == PanelType.COMPLIMENTARY else PanelStatus.NOT_QUALIFIED
         self.status = PanelStatus.NOT_QUALIFIED
         self.progress = 0 # for how many days this panel has been working already
         self.settings = PanelSettings.REPURCHASE_100
         self.locked = False
-
 
     def regenerate(self):
         if self.type == PanelType.COMPLIMENTARY and self.cycle == 0:
@@ -65,25 +61,14 @@ class Panel:
         else:
             panel = Panel(self.color, PanelType.REPURCHASED)
         panel.cycle = self.cycle + 1
+        print 'Panel %s regenerated' % panel
         return panel
 
-    # TODO remove this method
-    def reset(self):
-        raise Exception()
-        """
-        regenerate a new panel of the same color
-        """
-#        if self.type == PanelType.COMPLIMENTARY and self.cycle == 0:
-#            self.status = PanelStatus.ACTIVE
-#        else:
-#            self.status = PanelStatus.NOT_QUALIFIED
-#            self.type = PanelType.REPURCHASED
-        if self.cycle > 0:
-            self.type = PanelType.REPURCHASED
-        self.status = PanelStatus.NOT_QUALIFIED
-        self.cycle += 1
+    def qualify(self):
+        print "Qualifying the panel %s" % self
+        self.status = PanelStatus.ACTIVE
         self.progress = 0
-        self.locked = False
+
 
     def symbol(self):
         result = 'YPBGR?'[self.color] + '(%s,%s,%d%%)' % ('CPR'[self.type], 'NAC'[self.status], round(100.*self.progress/(self.time*7)))
@@ -102,9 +87,9 @@ class PanelManager:
     def add(self, panel):
         self.__panels[panel.color].append(panel)
 
-#    def __len__(self):
-#        return sum([len(p) for p in self.__panels.values()])
-#
+    def __len__(self):
+        return sum([len(p) for p in self.__panels.values()])
+
     def __iter__(self):
         for color in sorted(self.__panels, reverse=True):
             ind = 0
@@ -194,20 +179,14 @@ class AccountManager:
         if self.account.traffic < panel.traffic:
             raise TrafficException('Not enough traffic')
 
-        # Secondly, check if it is a black panel (unlimited qualifications) XXX remove this condition
+        # Secondly, check if it is a black panel (unlimited qualifications?) XXX remove this condition
         if panel.color == Panel.BLACK:
             return True
 
-        # Thirdly, check if there is macro for this color
+        # Thirdly, check if there is enough macro for this color
         if self.account.macro[panel.color] < panel.traffic:
             raise MakroException("Not enough macro")
 
-#        # Finally, check the 2:1 rule
-#        elif len(filter(lambda p: p.status == PanelStatus.ACTIVE, self.account.panels[panel.color])) -\
-#             len(filter(lambda p: p.type == PanelType.COMPLIMENTARY, self.account.panels[panel.color])) <\
-#             len(filter(lambda p: p.status == PanelStatus.ACTIVE, self.account.panels[panel.color + 1])) * 2:
-#            # kwalifikowane_tego_rzedu - complimentary_tego_rzedu < kwalifikowane_wyzszego_rzedu * 2
-#            return True
         return True
 
 
@@ -223,9 +202,8 @@ class AccountManager:
             # allow to qualify 2 additional panels of lower color
             self.account.macro[panel.color - 1] += PANELS_ATTRIBUTES[panel.color - 1][2] * 2
 
-        print "Qualifying the panel %s" % panel
-        panel.status = PanelStatus.ACTIVE
-        panel.progress = 0
+        panel.qualify()
+
 
     def rollup(self, color):
         assert(color < Panel.BLACK)
@@ -301,7 +279,7 @@ class BBSimulation:
             if self.day > 0:
                 self.manager.buyMembershipFee()
                 self.manager.buyTraffic()
-        # present panels in the inventory
+        # present all panels in the inventory
         for panel in self.manager.account.panels:
             print panel.symbol()
 
@@ -328,19 +306,15 @@ class BBSimulation:
                             # 2) replace the panel with its new copy
                             newpanel = panel.regenerate()
                             self.manager.account.panels[c][ind] = newpanel
-                            print 'Panel %s regenerated' % panel
                         elif panel.settings == PanelSettings.REPURCHASE_100:
                             # 1) replace the panel with its new copy
                             newpanel = panel.regenerate()
                             self.manager.account.panels[c][ind] = newpanel
-                            print 'Panel %s regenerated' % newpanel
                             # 2) buy a new panel of the same color
                             newpanel = panel.regenerate()
                             self.manager.account.panels[c].insert(0, newpanel)
                             ind += 1
-                            print 'Panel %s regenerated' % newpanel
                 ind += 1
-
 
 
     def run(self, months = 3):
@@ -387,5 +361,4 @@ if __name__ == '__main__':
 # jak jest z odpalaniem czarnych?
 
 # TODO auto roll-up (przy 6 niekwalifikowanych)
-# TODO refactoring: makro
 #
