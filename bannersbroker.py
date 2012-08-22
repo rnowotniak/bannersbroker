@@ -3,8 +3,6 @@
 #
 # Copyright (C) 2012   Robert Nowotniak, Nowotniak Technologies (C)
 #
-#
-
 
 import sys
 
@@ -22,6 +20,7 @@ class PanelType:
     COMPLIMENTARY = 0
     PURCHASED     = 1
     REPURCHASED   = 2
+    ROLLUP        = 3
 
 class PanelSettings:
     REPURCHASE_50  = 0
@@ -30,6 +29,7 @@ class PanelSettings:
 class PanelStatus:
     NOT_QUALIFIED = 0
     ACTIVE = 1
+    # FINISHED = 2   # -- no actions can be performed on such panels anyway
 
 class Panel:
     YELLOW = 0
@@ -71,7 +71,7 @@ class Panel:
 
 
     def symbol(self):
-        result = 'YPBGR?'[self.color] + '(%s,%s,%d%%)' % ('CPR'[self.type], 'NAC'[self.status], round(100.*self.progress/(self.time*7)))
+        result = 'YPBGRX'[self.color] + '(%s,%s,%d%%)' % ('CPRU'[self.type], 'NA'[self.status], round(100.*self.progress/(self.time*7)))
         return result
 
     def __str__(self):
@@ -97,7 +97,7 @@ class PanelManager:
                 panel = self.__panels[color][ind]
                 yield panel
                 ind += 1
-#
+
     def __getitem__(self, item):
         return self.__panels[item]
 
@@ -118,10 +118,16 @@ class Account:
         self.type = Account.STANDARD
         self.panels = PanelManager()
         self.macro = {}
-        for color in xrange(len(PANELS_ATTRIBUTES)):
+        for color in xrange(len(Panel.COLORS)):
             # free macro for 5 qualifications in each color
             self.macro[color] = PANELS_ATTRIBUTES[color][2] * 5
         print "Created %s" % str(self)
+
+    def printMacro(self):
+        result = 'Macro:'
+        for color in Panel.COLORS:
+            result += ' %d' % self.macro[color]
+        return result
 
     def __str__(self):
         return 'Account: $%.2f   (traffic: %d)' % (self.wallet, self.traffic)
@@ -176,10 +182,10 @@ class AccountManager:
             return True
 
         # Check if there is enough traffic
-        if self.account.traffic < panel.traffic:
+        if self.account.traffic < panel.traffic: # TODO: ... and self.account.color_banks[panel.color] < panel.traffic
             raise TrafficException('Not enough traffic')
 
-        # Secondly, check if it is a black panel (unlimited qualifications?) XXX remove this condition
+        # Secondly, check if it is a black panel (unlimited qualifications?)
         if panel.color == Panel.BLACK:
             return True
 
@@ -194,13 +200,18 @@ class AccountManager:
         if not self.canQualify(panel):
             return
 
+        # TODO: signal panel qualification
+
         if panel.type != PanelType.COMPLIMENTARY:
             self.account.traffic -= panel.traffic
             self.account.macro[panel.color] -= panel.traffic
 
-        if panel.color > Panel.YELLOW:
-            # allow to qualify 2 additional panels of lower color
-            self.account.macro[panel.color - 1] += PANELS_ATTRIBUTES[panel.color - 1][2] * 2
+            # Qualification of a complimentary panel does not increase macro for the panel owner
+            if panel.color > Panel.YELLOW:
+                # allow to qualify 2 additional panels of lower color
+                self.account.macro[panel.color - 1] += PANELS_ATTRIBUTES[panel.color - 1][2] * 2
+
+        # TODO: notify the sponsor about macro and traffic donation (IF it is a PURCHASE panel)
 
         panel.qualify()
 
@@ -213,7 +224,7 @@ class AccountManager:
             for y in to_rollup:
                 self.account.panels[color].remove(y)
                 # add 1 new higher panel
-            newpanel = Panel(color + 1)
+            newpanel = Panel(color + 1, PanelType.ROLLUP)
             self.account.panels.add(newpanel)
             return newpanel
         else:
@@ -250,7 +261,7 @@ class ArekStrategy:
                         simulation.manager.qualifyPanel(panel)
                     except MakroException:
                         print "Can't qualify the panel %s" % panel
-                        if panel.color == Panel.PURPLE: #m and len(simulation.manager.account.panels[Panel.BLUE]) == 0:
+                        if panel.color == Panel.PURPLE: # and len(simulation.manager.account.panels[Panel.BLUE]) == 0:
                             try:
                                 newpanel = simulation.manager.rollup(Panel.PURPLE)
                                 print 'Rolled'
@@ -274,7 +285,8 @@ class BBSimulation:
 
     def step(self):
         print '- day %d; %s -' % (self.day, self.manager.account)
-        # handle the "special" day (buy a membership fee and a traffic pack)
+        print self.manager.account.printMacro()
+        # handle the "special" day (pay a membership fee and buy a traffic pack)
         if self.day % 30 == 0:
             if self.day > 0:
                 self.manager.buyMembershipFee()
@@ -299,6 +311,8 @@ class BBSimulation:
                     panel.progress += 1
                     if panel.progress == panel.time * 7:
                         # the panel has gained its final revenue
+                        # TODO: donate macro and traffic to owner (according to purchase/re-purchase)
+                        # TODO: signal panel finish
                         if panel.settings == PanelSettings.REPURCHASE_50:
                             # 1) earn revenue
                             print 'Panel %s earned $ %.2f' % (panel, panel.price)
@@ -357,8 +371,26 @@ if __name__ == '__main__':
 # w zasadzie 2 1, ten "1" może byc niekwalifikowany?
 #    (chyba musi być kwalifikowany)
 #
-# czy mozna rollowac panele, ktore moga byc odpalane?
+# czy mozna rollowac panele, ktore moga byc odpalane?  tak
 # jak jest z odpalaniem czarnych?
-
+#
+# panel rollup daje traffic na koncie sponsora juz na poczatku czy dopiero za zakonczeniu swojej pracy?
+#
+# do optymalizacji:
+#   * kwota wejscia
+#   * panel wejscia
+#   * reinwestycje (repurchase, zakup dodatkowych paneli za kase z ewalletu)
+#   * przekazywanie paneli między kontami
+#
+# TODO:
+#   donate makro and traffic to sponsor (re-purchase - na koncu; purchase - na poczatku)
+#   wykresy makro
+#   wykres calkowitego stanu konta (z panelami)
+#   lockowanie
+#   konto premium
+#   traffic booster
+#
+#
+#
 # TODO auto roll-up (przy 6 niekwalifikowanych)
 #

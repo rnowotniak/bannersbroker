@@ -4,6 +4,13 @@ import sys
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 import re
+import numpy as np
+
+COLORS = {
+    'Y' : 'yellow',
+    'P' : '#FF00FF',
+    'B' : '#5050FF'
+}
 
 plt.figure(figsize=(10,15))
 
@@ -11,6 +18,7 @@ days = []
 wallet = []
 traffic = []
 memb = []
+macro = None
 day = None
 
 f = open('data.txt')
@@ -27,14 +35,26 @@ while True:
     match = re.match('buying a monthly membership', line)
     if match and day != None:
         memb.append(day)
-#        print match.group(3)
+    match = re.match('^Macro: (\d+ \d+ \d+ \d+ \d+ \d+)', line)
+    if match:
+        line = [float(m) for m in match.group(1).split()]
+        if macro is None:
+            macro = np.matrix(line)
+        else:
+            macro = np.vstack([macro, line])
 f.close()
+
+
+#plt.show()
+
+#sys.exit(0)
 
 weeks = range(0,day,28)
 
 #sys.exit(0)
 
-plt.subplot(311)
+plt.subplot(411)
+
 plt.ylabel('wallet ($)')
 plt.xlim(0,float(days[-1]))
 plt.plot(days,wallet)
@@ -46,9 +66,22 @@ plt.xlabel('time (days)')
 plt.xticks(weeks)
 plt.grid()
 
+plt.subplot(412)
+macro[:,0] /= 5000
+macro[:,1] /= 15000
+macro[:,2] /= 45000
+plt.plot(days, macro[:,0], COLORS['Y'], label='yellow', marker='o', linewidth=5, markevery=7)
+plt.plot(days, macro[:,1], COLORS['P'], label='purple', marker='x', linewidth=3, markevery=7, markersize=7)
+plt.plot(days, macro[:,2], COLORS['B'], label='blue', linewidth=3)
+plt.ylim(0, macro[:,:3].max() + 1)
+plt.ylabel('macro (normalized)')
+plt.xlim(0,float(days[-1]))
+plt.xlabel('time (days)')
+plt.xticks(weeks)
+plt.legend()
 plt.grid(True)
 
-plt.subplot(312)
+plt.subplot(413)
 plt.ylabel('traffic (K)')
 plt.xlim(0,float(days[-1]))
 plt.plot(days,traffic)
@@ -59,15 +92,11 @@ plt.grid()
 
 plt.grid(True)
 
-plt.subplot(313)
+plt.subplot(414)
 plt.ylabel('panels')
 
 
-COLORS = {
-    'Y' : 'yellow',
-    'P' : '#FF00FF',
-    'B' : '#5050FF'
-}
+
 LENGTHS = {
     'Y' : 4,
     'P' : 6,
