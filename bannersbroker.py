@@ -121,6 +121,8 @@ class Account:
         for color in xrange(len(Panel.COLORS)):
             # free macro for 5 qualifications in each color
             self.macro[color] = PANELS_ATTRIBUTES[color][2] * 5
+        self.referrals = []
+        self.inviter = None
         print "Created %s" % str(self)
 
     def printMacro(self):
@@ -353,6 +355,13 @@ class ArekStrategy(AbstractStrategy):
 
 class RobertStrategy(AbstractStrategy):
 
+    def start(self, simulation):
+        simulation.manager.buyPackage(Panel.BLUE)
+        simulation.manager.buyTraffic()
+        print 'Buying additional panels'
+        simulation.manager.buyPanel(Panel.PURPLE, 2)
+        simulation.manager.buyPanel(Panel.YELLOW, 6)
+
     def callback(self, simulation):
 #        if simulation.manager.account.wallet >= 360:
 #            simulation.manager.buyPanel(Panel.GREEN)
@@ -390,14 +399,8 @@ if __name__ == '__main__':
     # strategy = Strategy1()
     strategy = RobertStrategy()
 
-    manager.buyPackage(Panel.BLUE)
-    manager.buyTraffic()
-    print 'Buying additional panels'
-    manager.buyPanel(Panel.PURPLE, 2)
-    manager.buyPanel(Panel.YELLOW, 6)
-
-    print account
-    print account.panels
+#    print account
+#    print account.panels
 
     sim = BBSimulation(manager, strategy)
     sim.run(months = 13)
