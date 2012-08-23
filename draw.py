@@ -9,7 +9,8 @@ import numpy as np
 COLORS = {
     'Y' : 'yellow',
     'P' : '#FF00FF',
-    'B' : '#5050FF'
+    'B' : '#5050FF',
+    'G' : 'green',
 }
 
 plt.figure(figsize=(10,15))
@@ -70,9 +71,11 @@ plt.subplot(412)
 macro[:,0] /= 5000
 macro[:,1] /= 15000
 macro[:,2] /= 45000
+macro[:,3] /= 135000
 plt.plot(days, macro[:,0], COLORS['Y'], label='yellow', marker='o', linewidth=5, markevery=7)
 plt.plot(days, macro[:,1], COLORS['P'], label='purple', marker='x', linewidth=3, markevery=7, markersize=7)
 plt.plot(days, macro[:,2], COLORS['B'], label='blue', linewidth=3)
+plt.plot(days, macro[:,3], COLORS['G'], label='green', linewidth=3)
 plt.ylim(0, macro[:,:3].max() + 1)
 plt.ylabel('macro (normalized)')
 plt.xlim(0,float(days[-1]))
@@ -101,6 +104,7 @@ LENGTHS = {
     'Y' : 4,
     'P' : 6,
     'B' : 7,
+    'G' : 8,
 }
 
 f = open('data.txt')

@@ -225,6 +225,7 @@ class AccountManager:
                 self.account.panels[color].remove(y)
                 # add 1 new higher panel
             newpanel = Panel(color + 1, PanelType.ROLLUP)
+            # TODO: set roll-up type (information of how many purchased packages was in to_rollup)
             self.account.panels.add(newpanel)
             return newpanel
         else:
@@ -232,45 +233,6 @@ class AccountManager:
 
 
 
-class Strategy1:
-
-    def callback(self, simulation):
-        # odpalac, co sie da
-        for panel in simulation.manager.account.panels:
-            panel.settings = PanelSettings.REPURCHASE_50
-            if panel.status == PanelStatus.NOT_QUALIFIED and simulation.manager.account.traffic >= panel.traffic: # strategy's heuristic rule
-                try:
-                    simulation.manager.qualifyPanel(panel)
-                except LimitException:
-                    print "Can't qualify the panel %s" % panel
-
-
-class ArekStrategy:
-
-    def callback(self, simulation):
-        # po ostatnim cyklu fioletowego, rollowac do niebieskiego
-        for color in reversed(Panel.COLORS): # reverse is important due to 2:1 rule
-            repeat = True
-            while repeat:
-                repeat = False
-                for panel in simulation.manager.account.panels[color]:
-                    panel.settings = PanelSettings.REPURCHASE_50
-                    if panel.type == PanelType.COMPLIMENTARY and panel.cycle == 0:
-                        panel.settings = PanelSettings.REPURCHASE_100
-                    try:
-                        simulation.manager.qualifyPanel(panel)
-                    except MakroException:
-                        print "Can't qualify the panel %s" % panel
-                        if panel.color == Panel.PURPLE: # and len(simulation.manager.account.panels[Panel.BLUE]) == 0:
-                            try:
-                                newpanel = simulation.manager.rollup(Panel.PURPLE)
-                                print 'Rolled'
-                                simulation.manager.qualifyPanel(newpanel)
-                                simulation.manager.buyPanel(Panel.PURPLE, 2)
-                                repeat = True
-                                break
-                            except RollupException:
-                                pass
 
 
 class BBSimulation:
@@ -332,21 +294,103 @@ class BBSimulation:
 
 
     def run(self, months = 3):
+        self.strategy.start(self)
         for self.day in xrange(months * 31):
             if self.day % 7 == 0:
                 print '--- week %d %s---' % (self.day / 7, ('', '(%d months)'%(self.day/7/4))[self.day/7 % 4 == 0])
             self.step()
 
 
+class AbstractStrategy:
+
+    def start(self, simulation):
+        pass
+
+    def callback(self, simulation):
+        pass
+
+
+class Strategy1(AbstractStrategy):
+
+    def callback(self, simulation):
+        # odpalac, co sie da
+        for panel in simulation.manager.account.panels:
+            panel.settings = PanelSettings.REPURCHASE_50
+            if panel.status == PanelStatus.NOT_QUALIFIED and simulation.manager.account.traffic >= panel.traffic: # strategy's heuristic rule
+                try:
+                    simulation.manager.qualifyPanel(panel)
+                except LimitException:
+                    print "Can't qualify the panel %s" % panel
+
+
+class ArekStrategy(AbstractStrategy):
+
+    def callback(self, simulation):
+        # po ostatnim cyklu fioletowego, rollowac do niebieskiego
+        for color in reversed(Panel.COLORS): # reverse is important due to 2:1 rule
+            repeat = True
+            while repeat:
+                repeat = False
+                for panel in simulation.manager.account.panels[color]:
+                    panel.settings = PanelSettings.REPURCHASE_50
+                    if panel.type == PanelType.COMPLIMENTARY and panel.cycle == 0:
+                        panel.settings = PanelSettings.REPURCHASE_100
+                    try:
+                        simulation.manager.qualifyPanel(panel)
+                    except MakroException:
+                        print "Can't qualify the panel %s" % panel
+                        if panel.color == Panel.PURPLE: # and len(simulation.manager.account.panels[Panel.BLUE]) == 0:
+                            try:
+                                newpanel = simulation.manager.rollup(Panel.PURPLE)
+                                print 'Rolled'
+                                simulation.manager.qualifyPanel(newpanel)
+                                simulation.manager.buyPanel(Panel.PURPLE, 2)
+                                repeat = True
+                                break
+                            except RollupException:
+                                pass
+
+
+class RobertStrategy(AbstractStrategy):
+
+    def callback(self, simulation):
+#        if simulation.manager.account.wallet >= 360:
+#            simulation.manager.buyPanel(Panel.GREEN)
+#            simulation.manager.buyPanel(Panel.BLUE)
+        for color in reversed(Panel.COLORS): # reverse is important due to 2:1 rule
+            repeat = True
+            while repeat:
+                repeat = False
+                for panel in simulation.manager.account.panels[color]:
+                    panel.settings = PanelSettings.REPURCHASE_50
+                    if panel.type == PanelType.COMPLIMENTARY and panel.cycle == 0:
+                        panel.settings = PanelSettings.REPURCHASE_100
+                    try:
+                        simulation.manager.qualifyPanel(panel)
+                    except LimitException:
+                        print "Can't qualify the panel %s" % panel
+                        continue
+                        if panel.color == Panel.PURPLE: # and len(simulation.manager.account.panels[Panel.BLUE]) == 0:
+                            try:
+                                newpanel = simulation.manager.rollup(Panel.PURPLE)
+                                print 'Rolled'
+                                simulation.manager.qualifyPanel(newpanel)
+                                simulation.manager.buyPanel(Panel.PURPLE, 2)
+                                repeat = True
+                                break
+                            except RollupException:
+                                pass
+
+
 if __name__ == '__main__':
 
-    account = Account(225)
+    account = Account(325)
     manager = AccountManager(account)
 
-    #    strategy = Strategy1()
-    strategy = ArekStrategy()
+    # strategy = Strategy1()
+    strategy = RobertStrategy()
 
-    manager.buyPackage(Panel.PURPLE)
+    manager.buyPackage(Panel.BLUE)
     manager.buyTraffic()
     print 'Buying additional panels'
     manager.buyPanel(Panel.PURPLE, 2)
@@ -367,12 +411,11 @@ if __name__ == '__main__':
 # domyslnie jest repurchase 50 czy 100  (dla kazdego przypadku?)  (100)
 # po dwoch cyklach Complimentary znikaja totalnie i w ogole? (tak)
 # complimentary nie wchodza do liczby 5, ktore mozna odpalic bez limitow z danego koloru? (tak)
-# czy sam 1 complimentary danego koloru pozwala na to, aby odpalic dwa nizszego koloru? (tak)
-# w zasadzie 2 1, ten "1" może byc niekwalifikowany?
-#    (chyba musi być kwalifikowany)
+# czy sam 1 complimentary danego koloru pozwala na to, aby odpalic dwa nizszego koloru? (NIE)
+# w zasadzie 2 1, ten "1" może byc niekwalifikowany? (musi być kwalifikowany)
 #
 # czy mozna rollowac panele, ktore moga byc odpalane?  tak
-# jak jest z odpalaniem czarnych?
+# jak jest z odpalaniem czarnych? podobno można dowolnie dużo
 #
 # panel rollup daje traffic na koncie sponsora juz na poczatku czy dopiero za zakonczeniu swojej pracy?
 #
@@ -382,14 +425,18 @@ if __name__ == '__main__':
 #   * reinwestycje (repurchase, zakup dodatkowych paneli za kase z ewalletu)
 #   * przekazywanie paneli między kontami
 #
+# Chromosomy:
+#    Y-225-...
+#    P-225-...
+#
 # TODO:
 #   donate makro and traffic to sponsor (re-purchase - na koncu; purchase - na poczatku)
-#   wykresy makro
 #   wykres calkowitego stanu konta (z panelami)
 #   lockowanie
 #   konto premium
 #   traffic booster
 #
+#   wykresy makro DONE
 #
 #
 # TODO auto roll-up (przy 6 niekwalifikowanych)
