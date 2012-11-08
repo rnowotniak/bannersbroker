@@ -17,7 +17,7 @@ Typical usage of the provided Python classes:
 	sim.run(months = 13)
 
 Simulation details will be printed to the standard output
-for further analysis. [draw.py](bannersbroker/draw.py) creates a plot
+for further analysis. [draw.py](https://github.com/rnowotniak/bannersbroker/blob/master/draw.py) creates a plot
 for the simulation. For example, by default,
 
 	$ python bannersbroker.py > data.txt
