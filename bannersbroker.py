@@ -433,6 +433,10 @@ if __name__ == '__main__':
 #    P-225-...
 #
 # TODO:
+#
+#   Zbadac strategie zaproponowana przez Tomasza Plicha
+#       (co miesiac wykupywanie o 1 traffic pack wiecej)
+#
 #   donate makro and traffic to sponsor (re-purchase - na koncu; purchase - na poczatku)
 #   wykres calkowitego stanu konta (z panelami)
 #   lockowanie
