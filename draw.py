@@ -56,12 +56,14 @@ weeks = range(0,day,28)
 
 plt.subplot(411)
 
+start = 265
+
 plt.ylabel('wallet ($)')
 plt.xlim(0,float(days[-1]))
 plt.plot(days,wallet)
-plt.plot([0],[325],'s', markersize=8)
-plt.plot([0,float(days[-1])], [325,325], 'g')
-plt.annotate('START', xy=(0, 325), xytext=(10,325), horizontalalignment='left')
+plt.plot([0],[start],'s', markersize=8)
+plt.plot([0,float(days[-1])], [start,start], 'g')
+plt.annotate('START', xy=(0, start), xytext=(10,start), horizontalalignment='left')
 plt.plot(memb,[0] * len(memb), 'or', markersize=15)
 plt.xlabel('time (days)')
 plt.xticks(weeks)

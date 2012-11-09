@@ -390,20 +390,43 @@ class RobertStrategy(AbstractStrategy):
                             except RollupException:
                                 pass
 
+class PPStrategy1(AbstractStrategy):
+    def start(self, simulation):
+        simulation.manager.buyPackage(Panel.PURPLE)
+        simulation.manager.buyTraffic()
+        print 'Buying additional panels'
+        simulation.manager.buyPanel(Panel.PURPLE, 2)
+        simulation.manager.buyPanel(Panel.YELLOW, 10)
+
+    def callback(self, simulation):
+        for color in reversed(Panel.COLORS): # reverse is important due to 2:1 rule
+            repeat = True
+            while repeat:
+                repeat = False
+                for panel in simulation.manager.account.panels[color]:
+                    panel.settings = PanelSettings.REPURCHASE_50
+                    if panel.type == PanelType.COMPLIMENTARY and panel.cycle == 0:
+                        panel.settings = PanelSettings.REPURCHASE_100
+                    try:
+                        simulation.manager.qualifyPanel(panel)
+                    except LimitException:
+                        print "Can't qualify the panel %s" % panel
+                        continue
+
 
 if __name__ == '__main__':
 
-    account = Account(325)
+    account = Account(265)
     manager = AccountManager(account)
 
     # strategy = Strategy1()
-    strategy = RobertStrategy()
+    strategy = PPStrategy1()
 
 #    print account
 #    print account.panels
 
     sim = BBSimulation(manager, strategy)
-    sim.run(months = 13)
+    sim.run(months = 6)
     print account.wallet
 
 
