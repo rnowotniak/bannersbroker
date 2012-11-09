@@ -56,7 +56,7 @@ weeks = range(0,day,28)
 
 plt.subplot(411)
 
-start = 265
+start = 1875
 
 plt.ylabel('wallet ($)')
 plt.xlim(0,float(days[-1]))

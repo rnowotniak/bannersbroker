@@ -255,6 +255,12 @@ class BBSimulation:
             if self.day > 0:
                 self.manager.buyMembershipFee()
                 self.manager.buyTraffic()
+                self.manager.buyTraffic()
+                self.manager.buyTraffic()
+                self.manager.buyTraffic()
+                self.manager.buyTraffic()
+                self.manager.buyTraffic()
+                self.manager.buyTraffic()
         # present all panels in the inventory
         for panel in self.manager.account.panels:
             print panel.symbol()
@@ -413,14 +419,30 @@ class PPStrategy1(AbstractStrategy):
                         print "Can't qualify the panel %s" % panel
                         continue
 
+class PPStrategy2(PPStrategy1):
+    def start(self, simulation):
+        simulation.manager.buyPackage(Panel.BLUE)
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        simulation.manager.buyTraffic()
+        print 'Buying additional panels'
+        simulation.manager.buyPanel(Panel.PURPLE, 14)
+        simulation.manager.buyPanel(Panel.YELLOW, 34)
+        simulation.manager.buyPanel(Panel.BLUE, 4)
+
 
 if __name__ == '__main__':
 
-    account = Account(265)
+    account = Account(1875)
+    account.type = Account.PREMIUM
     manager = AccountManager(account)
 
     # strategy = Strategy1()
-    strategy = PPStrategy1()
+    strategy = PPStrategy2()
 
 #    print account
 #    print account.panels
