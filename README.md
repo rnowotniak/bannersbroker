@@ -5,10 +5,10 @@ Author: Robert Nowotniak <rnowotniak@gmail.com>
 
 _**CAUTION**: I do **NOT** recommend nor discourage anyone investing their money in BannersBoker. 
 The presented scientific model and simulation software have been written
-in truly objective and neutral point of view.
-Clearly, **it is possible to make big money with BannersBroker very quickly** (as of winter 2012).
-However, be aware that **there are numerous strong premises that BannersBroker is a [Ponzi
-scheme](http://en.wikipedia.org/wiki/Ponzi_scheme)**. Make conscious and wise decision!_
+in truly **objective and neutral point of view**.
+Clearly, it is possible to make big money with BannersBroker very quickly (as of winter 2012).
+However, be aware that there are numerous strong premises that BannersBroker is a [Ponzi
+scheme](http://en.wikipedia.org/wiki/Ponzi_scheme). Make conscious and wise decision!_
 
 In August 2012, I created a mathematical model (based on discrete dynamical system) and
 the simulator software for account management in BannersBroker (BB). --
