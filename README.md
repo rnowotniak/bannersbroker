@@ -29,11 +29,12 @@ The code is organized as follows:
 2. [draw.py](https://github.com/rnowotniak/bannersbroker/blob/master/draw.py) -- plots generator
 
 I decided to release this software on General Public License (GPL),
-which allows each person to use it for free, for any purpose.
+which allows everyone to use it for free, for any purpose (and without any guarantee).
 
-At the same time, I remain open to the potential for cooperation in the future,
-for example, on the basis of the creation of paid forecasts, analysis or
-optimization strategy.  If there is such a demand in the future, I'm available.
+I'm open to possible cooperation.
+For example, I'm able to perform _paid_ forecasts, analysis or
+account management strategy optimization.
+Don't hesitate to contact me in such situations.
 
 Theoretical model of BannersBroker account management
 -----------------------------------------------------
