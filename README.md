@@ -35,8 +35,8 @@ At the same time, I remain open to the potential for cooperation in the future,
 for example, on the basis of the creation of paid forecasts, analysis or
 optimization strategy.  If there is such a demand in the future, I'm available.
 
-Theoretical model for BannersBroker
------------------------------------
+Theoretical model of BannersBroker account management
+-----------------------------------------------------
 
 ![model](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bannersbroker-0.jpg)
 
