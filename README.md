@@ -19,8 +19,8 @@ In the simulator, all rules of single account management have been implemented:
 monthly membership fees, traffic packs, limits (macro and color banks),
 5+2:1 principle, panel types: purchased, repurchased, complimentary and roll-up.
 The software allows to simulate Standard and Premium subscription types.
-_Reliability and accuracy of the simulations have been verified in practice,
-i.e. on real BannersBroker user accounts, from August 2012 to the present_.
+**Reliability and accuracy of the simulations have been verified in practice,
+i.e. on real BannersBroker user accounts, from August 2012 to the present.**
 
 The code is organized as follows:
 
