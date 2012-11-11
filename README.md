@@ -1,12 +1,21 @@
 BannersBroker modelling and simulation software in Python
 =========================================================
 
-Author: rnowotniak@gmail.com
+Author: Robert Nowotniak <rnowotniak@gmail.com>
+
+Theoretical model for BannersBroker
+-----------------------------------
+
+![model](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bannersbroker-0.jpg)
+
+![algorithm](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bannersbroker-1.jpg)
 
 Usage
 -----
 
 Typical usage of the provided Python classes:
+
+	from bannersbroker import *
 
 	account = Account(325)
 	manager = AccountManager(account)
@@ -27,10 +36,11 @@ creates the following plot:
 
 ![plots](https://raw.github.com/rnowotniak/bannersbroker/master/docs/plots.jpg)
 
-Theoretical model for BannersBroker
------------------------------------
+Examples: Selected simulations
+------------------------------
+### 11 yellow + 3 purple panels  ###
+![plots](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bb-11y-3p.jpg)
 
-![model](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bannersbroker-0.jpg)
-
-![algorithm](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bannersbroker-1.jpg)
+### 5 blue + 15 purple + 35 yellow panels ###
+![plots](https://raw.github.com/rnowotniak/bannersbroker/master/docs/bb-5b-15p-35y.jpg)
 

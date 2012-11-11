@@ -255,12 +255,6 @@ class BBSimulation:
             if self.day > 0:
                 self.manager.buyMembershipFee()
                 self.manager.buyTraffic()
-                self.manager.buyTraffic()
-                self.manager.buyTraffic()
-                self.manager.buyTraffic()
-                self.manager.buyTraffic()
-                self.manager.buyTraffic()
-                self.manager.buyTraffic()
         # present all panels in the inventory
         for panel in self.manager.account.panels:
             print panel.symbol()
@@ -437,18 +431,18 @@ class PPStrategy2(PPStrategy1):
 
 if __name__ == '__main__':
 
-    account = Account(1875)
-    account.type = Account.PREMIUM
+    account = Account(325)
+    # account.type = Account.PREMIUM
     manager = AccountManager(account)
 
     # strategy = Strategy1()
-    strategy = PPStrategy2()
+    strategy = RobertStrategy()
 
 #    print account
 #    print account.panels
 
     sim = BBSimulation(manager, strategy)
-    sim.run(months = 6)
+    sim.run(months = 12)
     print account.wallet
 
 
