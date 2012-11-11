@@ -18,11 +18,15 @@ optimization of a **single account management** in BannersBroker.
 In this simulator,
 all rules of single account management have been implemented:
 monthly membership fees, traffic packs, limits (macro and color banks),
-5+2:1 principle, panel types: purchased, repurchased, complimentary, and roll the
-panels
+5+2:1 principle, panel types: purchased, repurchased, complimentary and roll-up.
 The software allows to simulate Standard and Premium subscription types.
 Reliability and accuracy of the simulations have been verified in practice,
 i.e. on real accounts in BB from August 2012 to the present.
+
+The code is organized as follows:
+
+1. [bannersbroker.py](https://github.com/rnowotniak/bannersbroker/blob/master/bannersbroker.py) -- the main code of the simulator
+2. [draw.py](https://github.com/rnowotniak/bannersbroker/blob/master/draw.py) -- plots generator
 
 I decided to release this software on General Public License (GPL),
 which allows each person to use it for free, for any purpose.
