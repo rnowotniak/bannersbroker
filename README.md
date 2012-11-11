@@ -4,22 +4,23 @@ BannersBroker modelling and simulation software in Python
 Author: Robert Nowotniak <rnowotniak@gmail.com>
 
 In August 2012, I created a mathematical model (based on discrete dynamical system) and
-simulator software for account management in BannersBroker system. --
+the simulator software for account management in BannersBroker. --
 Initially, there were plans of running a paid site, allowing for example to
 perform calculations and simulations by BB users.
 
 Currently, I came to the conclusion, that I can no longer invest my time and
-work (which I put in, a lot already) in something that does not bind any
-future. Therefore, I decided to publish the results of all of my work in
-this area.
+work (which I put in, a lot already) in something I'm not going to be seriously
+involved with (for various reasons) in the future.
+Therefore, I decided to publish the results of all of my work in this area.
 
-The simulator allows you to create long-term forecasts, and to perform simulation and
-optimization of a single account management in the BB.
-The whole system is mapped to all the rules governing the panels in the BB:
-monthly membership fees, fees for traffic, limits (macro and color banks),
-Principle 5 +2:1, panels, purchased, repurchased, complimentary, and roll the
-panels.  The software allows to create a simulation for Standard and
-Premium subscription types.
+The simulator allows to create long-term forecasts, and to perform simulations and
+optimization of a **single account management** in BannersBroker.
+In this simulator,
+all rules of single account management have been implemented:
+monthly membership fees, traffic packs, limits (macro and color banks),
+5+2:1 principle, panel types: purchased, repurchased, complimentary, and roll the
+panels
+The software allows to simulate Standard and Premium subscription types.
 Reliability and accuracy of the simulations have been verified in practice,
 i.e. on real accounts in BB from August 2012 to the present.
 
