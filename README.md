@@ -3,10 +3,16 @@ BannersBroker modelling and simulation software in Python
 
 Author: Robert Nowotniak <rnowotniak@gmail.com>
 
+_**CAUTION**: I do **NOT** recommend nor discourage anyone investing their money in BannersBoker. 
+The presented scientific model and simulation software have been written
+in truly objective and neutral point of view.
+Be aware that there are numerous strong premises that BannersBroker is a [Ponzi
+scheme](http://en.wikipedia.org/wiki/Ponzi_scheme)._
+
 In August 2012, I created a mathematical model (based on discrete dynamical system) and
 the simulator software for account management in BannersBroker (BB). --
-Initially, there were plans of running a paid site, allowing for example to
-perform calculations and simulations by BB users.
+Initially, I've been encouraged to run a paid site, allowing BB users to perform
+calculations and simulations of account management strategies.
 
 Currently, I came to the conclusion, that I should no longer invest my time and
 work (which I put in, a lot already) in something I'm not going to be seriously
