@@ -45,7 +45,7 @@ Don't hesitate to contact me in such situations.
 Also, **I'm highly interested in writing a scientific paper (concerning analysis
 of BannersBroker as a _possible_ Ponzi scheme) to some peer-reviewed economic journal.
 If you are an economist, and you would like to collaborate and co-author the
-paper, please [write me a message](rnowotniak@gmail.com)!**
+paper, please [write me a message](mailto:rnowotniak@gmail.com)!**
 
 Theoretical model of BannersBroker account management
 -----------------------------------------------------
