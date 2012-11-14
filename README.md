@@ -3,7 +3,7 @@ BannersBroker modelling and simulation software in Python
 
 Author: Robert Nowotniak <rnowotniak@gmail.com>
 
-_**CAUTION**: I do **NOT** recommend nor discourage anyone investing their money in BannersBoker. 
+_**CAUTION**: I do **NOT** recommend nor discourage anyone to invest their money in BannersBoker. 
 The presented scientific model and simulation software have been written
 in truly **objective and neutral point of view**.
 Clearly, it is possible to make big money with BannersBroker very quickly (as of winter 2012).
@@ -41,6 +41,11 @@ I'm open to possible cooperation.
 For example, I'm able to perform _paid_ forecasts, analysis or
 account management strategy optimization.
 Don't hesitate to contact me in such situations.
+
+Also, **I'm highly interested in writing a scientific paper (concerning analysis
+of BannersBroker as a _possible_ Ponzi scheme) to some peer-reviewed economic journal.
+If you are an economist, and you would like to collaborate and co-author the
+paper, please [write me a message](rnowotniak@gmail.com)!**
 
 Theoretical model of BannersBroker account management
 -----------------------------------------------------
